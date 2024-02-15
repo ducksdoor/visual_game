@@ -1,5 +1,6 @@
 import pygame
 import random
+import os
 
 BLACK = (0, 0, 0)
 WIDTH, HEIGHT = 1000, 600
@@ -14,7 +15,15 @@ class Jugador:
         self.color = BLACK
         self.vida = 5
         self.mision = 1
-        self.image = pygame.image.load("carpeta/personaje.png").convert_alpha()  # Cargar la imagen del personaje
+
+        # Lista de nombres de archivos de imágenes
+        lista_imagenes = ["carpeta/personajes/heroe1rubio.png", "carpeta/personajes/heroe2rubio.png", "carpeta/personajes/heroe3rubio.png", "carpeta/personajes/heroe4rubio.png", "carpeta/personajes/heroe5rubio.png", "carpeta/personajes/heroe6rubio.png", "carpeta/personajes/heroe7rubio.png", "carpeta/personajes/heroe8rubio.png", "carpeta/personajes/heroe9rubio.png", "carpeta/personajes/heroe10rubio.png"]
+
+        # Cargar una imagen aleatoria de la lista
+        imagen_aleatoria = random.choice(lista_imagenes)
+
+        # Cargar la imagen desde la carpeta "imagenes" usando el nombre aleatorio
+        self.image = pygame.image.load(imagen_aleatoria).convert_alpha()  # No es necesario usar os.path.join
         self.rect = self.image.get_rect()  # Obtener el rectángulo de la imagen
         self.rect.topleft = (x, y)  # Establecer la posición inicial
 

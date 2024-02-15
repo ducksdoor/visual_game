@@ -22,7 +22,7 @@ def accion_ayuda(terminal_text):
 def comandos(Jugador, Enemigo, user_input, terminal_text):
     if user_input == "ayuda":
         terminal_text = []
-        terminal_text= accion_ayuda(terminal_text)
+        terminal_text = accion_ayuda(terminal_text)
         if Jugador.mision == 1:
             mision.mision(Jugador, terminal_text)
     elif user_input == "limpiar":

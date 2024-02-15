@@ -1,7 +1,7 @@
 import pygame
 import sys
 import random
-
+import time
 ###############archivos
 
 import inicio
@@ -9,11 +9,12 @@ from jugador import Jugador
 from enemigo import Enemigo
 import acciones
 import colision
+import cronometro
+# Inicializar Pygame, ventana de intro, y cronometro
 
-# Inicializar Pygame
 pygame.init()
 inicio.mostrar_ventana_inicial()
-
+clock = pygame.time.Clock()
 # Definir colores
 WHITE = (255, 255, 255)
 ROJO = (255, 0, 0)
@@ -77,12 +78,14 @@ pergamino = pygame.transform.scale(pergamino, (WIDTH - MAX_X, HEIGHT))  # Escala
 
 # Bucle principal del juego
 run = True
+tiempo_inicio = time.time()
 text_input_mode = False  # Estado inicial: modo de movimiento del cuadrado
 
 # Flag para indicar si se ha mostrado el mensaje de bienvenida
 welcome_displayed = False
 
 while run:
+
     # Manejo de eventos
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -92,13 +95,13 @@ while run:
             mouse_x, mouse_y = pygame.mouse.get_pos()
             # Verificar si el clic del mouse está dentro del área de entrada de texto
             if user_input_rect.collidepoint(mouse_x, mouse_y):
-                text_input_mode = True  # Cambiar al modo diae entrada de texto
+                text_input_mode = True  # Cambiar al modo de entrada de texto
             # Verificar si el clic del mouse está dentro del área de envío de texto
             elif send_area_rect.collidepoint(mouse_x, mouse_y):
                 if user_input:  # Verificar si el usuario ha ingresado texto
-                    termianl_text = acciones.comandos(jugador, enemigo, user_input, terminal_text)
+                    terminal_text = acciones.comandos(jugador, enemigo, user_input, terminal_text)
                     user_input = ''  # Reiniciar el texto de entrada del usuario
-                text_input_mode = False  # Cambiar al modo de movimiento del cuadrado
+                text_input_mode = False  # Cambiar al modo de movimiento de jugador
             elif not user_input_rect.collidepoint(mouse_x, mouse_y):  # Verificar si el clic está fuera del área de entrada de texto
                 text_input_mode = False  # Desactivar el modo de entrada de texto
             #esta parte siempre trae problemas, no hay que eliminarla ni bloquearla con otros ifs...
@@ -131,18 +134,22 @@ while run:
 
     # Dibujar la ventana
     window.blit(fondo, (0, 0))  # Dibujar el fondo en la sección azul
+    # Dibujar el cronómetro
+    cronometro.mostrar_cronometro(font, window, tiempo_inicio)
 
+    # Actualizar la ventana y controlar la tasa de fotogramas
+    clock.tick(60)
     # Calcular 3/4 partes de la altura de la ventana
     three_fourth_height = HEIGHT * 3 // 4
 
     # Dibujar al jugadora
     jugador.dibujar(window)
-    if enemigo is not None:
-        enemigo.dibujar(window)
 
-    enemigo.mover_enemigo()
-    # Dibujar y mover los disparos del enemigo
     if enemigo is not None:
+        tiempo_actual = time.time()
+        enemigo.mover_enemigo(tiempo_actual)
+        enemigo.dibujar(window)
+        # Dibujar y mover los disparos del enemigo
         for disparo in enemigo.projectiles:
             window.blit(enemigo.projectile_image, (int(disparo['x']), int(disparo['y'])))
             # Mover el disparo en su dirección
@@ -155,23 +162,18 @@ while run:
             elif colision.verificar_colision_circulos(jugador.rect.x, jugador.rect.y, jugador.size, disparo['x'], disparo['y'], 5):
                 jugador.recibir_danio()
                 enemigo.projectiles.remove(disparo)
-    if enemigo is not None:
         enemigo.actualizar_proyectiles()
+        # Verificar si el enemigo ha perdido todas sus vidas
+        if enemigo.vida <= 0:
+            enemigo = None  # Eliminar al enemigo
+            print("Enemigo eliminado")
+
 
     # Verificar si el jugador ha perdido todas sus vidas
     if jugador.vida <= 0:
         print("Game Over")
         run = False
 
-    # Verificar si el enemigo ha perdido todas sus vidas
-    if enemigo is not None:
-        if enemigo.vida <= 0:
-            enemigo = None  # Eliminar al enemigo
-            print("Enemigo eliminado")
-
-    # Dibujar el primer rectángulo que ocupa 3/4 partes de la altura total
-    #esto era el rectangulo gris
-    #pygame.draw.rect(window, GRAY, (MAX_X, 0, WIDTH - MAX_X, three_fourth_height))
     window.blit(pergamino, (MAX_X, 0))  # Dibujar el pergamino en la sección gris
 
     # Dibujar el segundo rectángulo que cubre el cuarto restante de la altura total

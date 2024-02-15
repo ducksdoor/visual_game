@@ -18,7 +18,8 @@ class Enemigo:
         self.projectile_image = pygame.image.load('carpeta/impacto_32_32.png').convert_alpha()
         self.projectiles = []  # Lista para almacenar los proyectiles disparados por el enemigo
         self.vida = 5
-
+        self.direction = random.choice(['arriba', 'arriba+derecha', 'arriba+izquierda', 'abajo', 'abajo+derecha', 'abajo+izquierda', 'izquierda', 'derecha'])
+        self.last_direction_change_time = 0
     def disparar(self, jugador):
         dx = jugador.rect.x - self.x
         dy = jugador.rect.y - self.y
@@ -41,34 +42,56 @@ class Enemigo:
         vida_length = self.vida * 10  # Ancho de la barra de vida (10 px por punto de vida)
         pygame.draw.rect(surface, ROJO, (self.x - vida_length // 2, self.y + self.size + 5, vida_length, 5))
 
-    def mover_enemigo(self):
-        # Actualizar la posición en X del enemigo
-        self.x -= self.speed
+    def mover_enemigo(self, tiempo_actual):
+        # Cambiar la dirección cada dos segundos
+        if tiempo_actual - self.last_direction_change_time >= 2:
+            self.direction = random.choice(['arriba', 'arriba+derecha', 'arriba+izquierda', 'abajo', 'abajo+derecha', 'abajo+izquierda', 'izquierda', 'derecha'])
+            self.last_direction_change_time = tiempo_actual
 
-        # Si el enemigo sale de la pantalla por la izquierda, reiniciar su posición en X
-        if self.x < 0 - self.size:
-            self.x = 800
-
-
-#esta un poco rota
-    def mover_aleatorio(self):
-        # Generar una dirección aleatoria
-        dx = -1  # Mover de derecha a izquierda
-        dy = random.uniform(-1, 1)
-
-        # Calcular la distancia total y el movimiento por frame
-        distancia_total = 100
-        movimiento_por_frame = distancia_total / self.speed
-
-        # Mover el enemigo en la dirección aleatoria
-        self.x += movimiento_por_frame * dx
-        self.y += movimiento_por_frame * dy
-
-        # Cambiar de dirección aleatoria
-        self.direccion = random.randint(0, 3)
-
-
-
+        if self.direction == 'arriba':
+            if self.y > 150:  # Asegurar que no esté demasiado cerca del borde superior
+                self.y -= self.speed
+            else:  # Cambiar de dirección si llega al borde
+                self.direction = random.choice(['abajo', 'abajo+derecha', 'abajo+izquierda', 'izquierda', 'derecha'])
+        elif self.direction == 'abajo':
+            if self.y + self.size < HEIGHT - 150:  # Asegurar que no esté demasiado cerca del borde inferior
+                self.y += self.speed
+            else:  # Cambiar de dirección si llega al borde
+                self.direction = random.choice(['arriba', 'arriba+derecha', 'arriba+izquierda', 'izquierda', 'derecha'])
+        elif self.direction == 'izquierda':
+            if self.x > 150:  # Asegurar que no esté demasiado cerca del borde izquierdo
+                self.x -= self.speed
+            else:  # Cambiar de dirección si llega al borde
+                self.direction = random.choice(['arriba', 'arriba+derecha', 'abajo', 'abajo+derecha', 'izquierda'])
+        elif self.direction == 'derecha':
+            if self.x + self.size < MAX_X - 150:  # Asegurar que no esté demasiado cerca del borde derecho
+                self.x += self.speed
+            else:  # Cambiar de dirección si llega al borde
+                self.direction = random.choice(['arriba', 'arriba+izquierda', 'abajo', 'abajo+izquierda', 'derecha'])
+        elif self.direction == 'arriba+derecha':
+            if self.y > 150 and self.x + self.size < MAX_X - 150:  # Asegurar que no esté demasiado cerca de los bordes
+                self.y -= self.speed
+                self.x += self.speed
+            else:  # Cambiar de dirección si llega al borde
+                self.direction = random.choice(['abajo', 'abajo+izquierda', 'izquierda'])
+        elif self.direction == 'arriba+izquierda':
+            if self.y > 150 and self.x > 150:  # Asegurar que no esté demasiado cerca de los bordes
+                self.y -= self.speed
+                self.x -= self.speed
+            else:  # Cambiar de dirección si llega al borde
+                self.direction = random.choice(['abajo', 'abajo+derecha', 'derecha'])
+        elif self.direction == 'abajo+derecha':
+            if self.y + self.size < HEIGHT - 150 and self.x + self.size < MAX_X - 150:  # Asegurar que no esté demasiado cerca de los bordes
+                self.y += self.speed
+                self.x += self.speed
+            else:  # Cambiar de dirección si llega al borde
+                self.direction = random.choice(['arriba', 'arriba+izquierda', 'izquierda'])
+        elif self.direction == 'abajo+izquierda':
+            if self.y + self.size < HEIGHT - 150 and self.x > 150:  # Asegurar que no esté demasiado cerca de los bordes
+                self.y += self.speed
+                self.x -= self.speed
+            else:  # Cambiar de dirección si llega al borde
+                self.direction = random.choice(['arriba', 'arriba+derecha', 'derecha'])
 
     def actualizar_proyectiles(self):
         # Mover y eliminar los proyectiles que salieron de la pantalla
