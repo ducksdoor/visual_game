@@ -7,7 +7,7 @@ def mostrar_ventana_inicial():
     window = pygame.display.set_mode((WIDTH, HEIGHT))
     font = pygame.font.Font(None, 36)
     BLACK = (0, 0, 0)
-    fondo = pygame.image.load("carpeta/fondo.jpg").convert()  # Cargar la imagen de fondo
+    fondo = pygame.image.load("imagen/fondo.jpg").convert()  # Cargar la imagen de fondo
     fondo = pygame.transform.scale(fondo, (WIDTH, HEIGHT))  # Escalar la imagen al tamaño de la ventana
 
     run = True

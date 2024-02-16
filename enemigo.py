@@ -14,8 +14,8 @@ class Enemigo:
         self.y = y
         self.size = size
         self.speed = speed
-        self.image = pygame.image.load('carpeta/enemigo.png').convert_alpha()
-        self.projectile_image = pygame.image.load('carpeta/impacto_32_32.png').convert_alpha()
+        self.image = pygame.image.load('imagen/enemigo.png').convert_alpha()
+        self.projectile_image = pygame.image.load('imagen/impacto_32_32.png').convert_alpha()
         self.projectiles = []  # Lista para almacenar los proyectiles disparados por el enemigo
         self.vida = 5
         self.direction = random.choice(['arriba', 'arriba+derecha', 'arriba+izquierda', 'abajo', 'abajo+derecha', 'abajo+izquierda', 'izquierda', 'derecha'])

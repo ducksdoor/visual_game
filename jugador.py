@@ -17,7 +17,13 @@ class Jugador:
         self.mision = 1
 
         # Lista de nombres de archivos de imágenes
-        lista_imagenes = ["carpeta/personajes/heroe1rubio.png", "carpeta/personajes/heroe2rubio.png", "carpeta/personajes/heroe3rubio.png", "carpeta/personajes/heroe4rubio.png", "carpeta/personajes/heroe5rubio.png", "carpeta/personajes/heroe6rubio.png", "carpeta/personajes/heroe7rubio.png", "carpeta/personajes/heroe8rubio.png", "carpeta/personajes/heroe9rubio.png", "carpeta/personajes/heroe10rubio.png"]
+        lista_imagenes = ["imagen/personajes/heroe1rubio.png", "imagen/personajes/heroe2rubio.png", "imagen/personajes/heroe3rubio.png", 
+                           "imagen/personajes/heroe4rubio.png", "imagen/personajes/heroe5rubio.png", "imagen/personajes/heroe6rubio.png", 
+                           "imagen/personajes/heroe7rubio.png", "imagen/personajes/heroe8rubio.png", "imagen/personajes/heroe9rubio.png", 
+                           "imagen/personajes/heroe10rubio.png", "imagen/personajes/heroina1.png", "imagen/personajes/heroina2.png", 
+                           "imagen/personajes/heroina3.png", "imagen/personajes/heroina4.png", "imagen/personajes/heroina5.png", 
+                           "imagen/personajes/heroina6.png", "imagen/personajes/heroina7.png", "imagen/personajes/heroina8.png", 
+                           "imagen/personajes/heroina9.png", "imagen/personajes/heroina10.png"]
 
         # Cargar una imagen aleatoria de la lista
         imagen_aleatoria = random.choice(lista_imagenes)

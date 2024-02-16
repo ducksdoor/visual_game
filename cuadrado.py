@@ -65,11 +65,11 @@ welcome_index = 0
 welcome_display = ""
 
 # Cargar la imagen de fondo
-fondo = pygame.image.load("carpeta/fondo.jpg").convert()
+fondo = pygame.image.load("imagen/fondo.jpg").convert()
 fondo = pygame.transform.scale(fondo, (MAX_X, HEIGHT))  # Escalar la imagen al tamaño de la sección azul
 
 # Cargar la imagen del pergamino para la sección gris
-pergamino = pygame.image.load("carpeta/pergamino.jpg").convert()
+pergamino = pygame.image.load("imagen/pergamino.jpg").convert()
 pergamino = pygame.transform.scale(pergamino, (WIDTH - MAX_X, HEIGHT))  # Escalar la imagen al tamaño de la sección gris
 
 
