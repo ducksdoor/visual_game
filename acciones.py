@@ -2,7 +2,6 @@ import mision
 import utiles
 
 """lista de comandos 
-"tp", te teletransporta. 
 "ayuda", te da información sobre comandos.
 "limpiar", creo que es demasiado largo para mi gusto, solo limpia cuando esto podria ser un boton...
 ("atq", "atk"), quita uno de vida, a esto se le podia añadir ataque o atack para que quite mas ... 
@@ -15,7 +14,6 @@ def accion_ayuda(terminal_text):
 
     terminal_text.append("Tienes la siguiente lista de comandos :")
     terminal_text.append("limpiar: borra todo los escrito.")
-    terminal_text.append("tp: teletransportate.")
     terminal_text.append("atq/atk: golpea al enemigo")
     return (terminal_text)
 
@@ -27,8 +25,6 @@ def comandos(Jugador, Enemigo, user_input, terminal_text):
             mision.mision(Jugador, terminal_text)
     elif user_input == "limpiar":
         terminal_text = []
-    elif user_input == "tp":
-        Jugador.x, Jugador.y = Jugador.move_square_random()
     elif user_input in ["atq", "atk"]:
         if Enemigo is not None:
             Enemigo.recibir_danio()

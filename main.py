@@ -13,31 +13,29 @@ import cronometro
 # Inicializar Pygame, ventana de intro, y cronometro
 
 pygame.init()
-inicio.mostrar_ventana_inicial()
+
 clock = pygame.time.Clock()
 # Definir colores
 WHITE = (255, 255, 255)
 ROJO = (255, 0, 0)
 BLACK = (0, 0, 0)
-GRAY = (150, 150, 150)
 VERDE = (0, 255, 0)
 MARRON = (139, 69, 19)
 BLUE = pygame.Color('lightskyblue3')
+# Obtener el tamaño de la pantalla del ordenador
+screen_info = pygame.display.Info()
+SCREEN_WIDTH, SCREEN_HEIGHT = screen_info.current_w, screen_info.current_h
 
-# Configurar la ventana
-WIDTH, HEIGHT = 1000, 600  # Cambiar el tamaño de la ventana
-window = pygame.display.set_mode((WIDTH, HEIGHT))
+# Configurar la ventana en pantalla completa
+window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption("Juego RPG de Combate")
 
 # Limitar la posición máxima del cuadrado a las 2/3 partes izquierdas de la pantalla
-MAX_X = WIDTH * 2 // 3
-
-
-# Función para verificar colisiones entre dos círculos
+MAX_X = SCREEN_WIDTH * 2 // 3
 
 # Instanciar el jugador y enemigo
-jugador = Jugador(WIDTH // 3, HEIGHT - 50)
-enemigo = Enemigo(WIDTH // 3, HEIGHT // 3)
+jugador = Jugador(SCREEN_WIDTH // 3, SCREEN_HEIGHT - 50)
+enemigo = Enemigo(SCREEN_WIDTH // 3, SCREEN_HEIGHT // 3)
 vida_length = jugador.vida * 5
 
 # Lista de disparos del enemigo
@@ -50,12 +48,12 @@ font = pygame.font.Font(None, 24)
 # Texto ingresado por el usuario
 user_input = ''
 user_font = pygame.font.Font(None, 30)
-user_input_rect = pygame.Rect(MAX_X + 10, HEIGHT // 2 + 100, 400, 40)
+user_input_rect = pygame.Rect(MAX_X + 10, SCREEN_HEIGHT// 2 + 100, 400, 40)
 input_color = BLUE
 input_active = False
 
 # Definir las coordenadas y dimensiones del área para enviar texto
-send_area_rect = pygame.Rect(MAX_X + 10, HEIGHT // 2 + 150, 200, 50)
+send_area_rect = pygame.Rect(MAX_X + 10, SCREEN_HEIGHT// 2 + 150, 200, 50)
 send_area_color = (0, 255, 0)  # Cambiar a verde
 send_area_active = False
 
@@ -66,18 +64,19 @@ welcome_display = ""
 
 # Cargar la imagen de fondo
 fondo = pygame.image.load("imagen/fondo.jpg").convert()
-fondo = pygame.transform.scale(fondo, (MAX_X, HEIGHT))  # Escalar la imagen al tamaño de la sección azul
+fondo = pygame.transform.scale(fondo, (MAX_X, SCREEN_HEIGHT))  # Escalar la imagen al tamaño de la sección azul
 
 # Cargar la imagen del pergamino para la sección gris
 pergamino = pygame.image.load("imagen/pergamino.jpg").convert()
-pergamino = pygame.transform.scale(pergamino, (WIDTH - MAX_X, HEIGHT))  # Escalar la imagen al tamaño de la sección gris
+pergamino = pygame.transform.scale(pergamino, (SCREEN_WIDTH - MAX_X, SCREEN_HEIGHT))  # Escalar la imagen al tamaño de la sección gris
 
 
 
 #############################################################
 
 # Bucle principal del juego
-run = True
+run = inicio.mostrar_ventana_inicial()
+
 tiempo_inicio = time.time()
 text_input_mode = False  # Estado inicial: modo de movimiento del cuadrado
 
@@ -105,11 +104,13 @@ while run:
             elif not user_input_rect.collidepoint(mouse_x, mouse_y):  # Verificar si el clic está fuera del área de entrada de texto
                 text_input_mode = False  # Desactivar el modo de entrada de texto
             #esta parte siempre trae problemas, no hay que eliminarla ni bloquearla con otros ifs...
-            if jugador.x < mouse_x < jugador.x + jugador.size and jugador.y < mouse_y < jugador.y + jugador.size:
-                jugador.cambiar_color()
+            if jugador.rect.collidepoint(mouse_x, mouse_y):
+                jugador.cambiar_imagen()
 
         # Manejar eventos de teclado si estamos en modo de entrada de texto
         if event.type == pygame.KEYDOWN and text_input_mode:
+            if event.key == pygame.K_ESCAPE:
+                run = False
             if event.key == pygame.K_RETURN:
                 if user_input:  # Verificar si el usuario ha ingresado texto
                     terminal_text = acciones.comandos(jugador, enemigo, user_input, terminal_text)
@@ -140,7 +141,7 @@ while run:
     # Actualizar la ventana y controlar la tasa de fotogramas
     clock.tick(60)
     # Calcular 3/4 partes de la altura de la ventana
-    three_fourth_height = HEIGHT * 3 // 4
+    three_fourth_height = SCREEN_HEIGHT * 3 // 4
 
     # Dibujar al jugadora
     jugador.dibujar(window)
@@ -156,10 +157,10 @@ while run:
             disparo['x'] += disparo['dx']
             disparo['y'] += disparo['dy']
             # Verificar si el disparo ha salido de la pantalla y eliminarlo
-            if not (0 <= disparo['x'] <= WIDTH and 0 <= disparo['y'] <= HEIGHT):
+            if not (0 <= disparo['x'] <= SCREEN_WIDTH and 0 <= disparo['y'] <= SCREEN_HEIGHT):
                 enemigo.projectiles.remove(disparo)
             # Verificar colisión con el jugador
-            elif colision.verificar_colision_circulos(jugador.rect.x, jugador.rect.y, jugador.size, disparo['x'], disparo['y'], 5):
+            elif colision.verificar_colision_disparo(jugador.rect.x, jugador.rect.y, jugador.size, disparo['x'], disparo['y'], 5):
                 jugador.recibir_danio()
                 enemigo.projectiles.remove(disparo)
         enemigo.actualizar_proyectiles()
@@ -177,7 +178,7 @@ while run:
     window.blit(pergamino, (MAX_X, 0))  # Dibujar el pergamino en la sección gris
 
     # Dibujar el segundo rectángulo que cubre el cuarto restante de la altura total
-    pygame.draw.rect(window, MARRON, (MAX_X, three_fourth_height, WIDTH - MAX_X, HEIGHT - three_fourth_height))
+    pygame.draw.rect(window, MARRON, (MAX_X, three_fourth_height, SCREEN_WIDTH - MAX_X, SCREEN_HEIGHT - three_fourth_height))
 
     # Simular escritura del mensaje de bienvenida
     if welcome_index < len(welcome_message):

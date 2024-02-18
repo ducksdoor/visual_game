@@ -6,6 +6,15 @@ BLACK = (0, 0, 0)
 WIDTH, HEIGHT = 1000, 600
 MAX_X = WIDTH * 2 // 3
 
+# Lista de nombres de archivos de imágenes
+lista_imagenes = ["imagen/personajes/heroe1rubio.png", "imagen/personajes/heroe2rubio.png", "imagen/personajes/heroe3rubio.png", 
+                    "imagen/personajes/heroe4rubio.png", "imagen/personajes/heroe5rubio.png", "imagen/personajes/heroe6rubio.png", 
+                    "imagen/personajes/heroe7rubio.png", "imagen/personajes/heroe8rubio.png", "imagen/personajes/heroe9rubio.png", 
+                    "imagen/personajes/heroe10rubio.png", "imagen/personajes/heroina1.png", "imagen/personajes/heroina2.png", 
+                    "imagen/personajes/heroina3.png", "imagen/personajes/heroina4.png", "imagen/personajes/heroina5.png", 
+                    "imagen/personajes/heroina6.png", "imagen/personajes/heroina7.png", "imagen/personajes/heroina8.png", 
+                    "imagen/personajes/heroina9.png", "imagen/personajes/heroina10.png"]
+
 class Jugador:
     def __init__(self, x, y, size=50, speed=5):
         self.x = x
@@ -16,18 +25,9 @@ class Jugador:
         self.vida = 5
         self.mision = 1
 
-        # Lista de nombres de archivos de imágenes
-        lista_imagenes = ["imagen/personajes/heroe1rubio.png", "imagen/personajes/heroe2rubio.png", "imagen/personajes/heroe3rubio.png", 
-                           "imagen/personajes/heroe4rubio.png", "imagen/personajes/heroe5rubio.png", "imagen/personajes/heroe6rubio.png", 
-                           "imagen/personajes/heroe7rubio.png", "imagen/personajes/heroe8rubio.png", "imagen/personajes/heroe9rubio.png", 
-                           "imagen/personajes/heroe10rubio.png", "imagen/personajes/heroina1.png", "imagen/personajes/heroina2.png", 
-                           "imagen/personajes/heroina3.png", "imagen/personajes/heroina4.png", "imagen/personajes/heroina5.png", 
-                           "imagen/personajes/heroina6.png", "imagen/personajes/heroina7.png", "imagen/personajes/heroina8.png", 
-                           "imagen/personajes/heroina9.png", "imagen/personajes/heroina10.png"]
 
         # Cargar una imagen aleatoria de la lista
         imagen_aleatoria = random.choice(lista_imagenes)
-
         # Cargar la imagen desde la carpeta "imagenes" usando el nombre aleatorio
         self.image = pygame.image.load(imagen_aleatoria).convert_alpha()  # No es necesario usar os.path.join
         self.rect = self.image.get_rect()  # Obtener el rectángulo de la imagen
@@ -49,18 +49,8 @@ class Jugador:
         if keys[pygame.K_s] and self.rect.bottom < HEIGHT:  # Mover hacia abajo
             self.rect.y += self.speed
 
-    def cambiar_color(self):
-        self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-
-    def move_square_random(self):
-        white_zone_width = WIDTH * 3 // 4 - self.size
-        white_zone_height = HEIGHT - self.size
-
-        x = random.randint(0, white_zone_width)
-        y = random.randint(0, white_zone_height)
-
-        while x + self.size > white_zone_width or y + self.size > white_zone_height:
-            x = random.randint(0, white_zone_width)
-            y = random.randint(0, white_zone_height)
-
-        return x, y
+    def cambiar_imagen(self):
+        imagen_aleatoria = random.choice(lista_imagenes)
+        # Cargar la imagen desde la carpeta "imagenes" usando el nombre aleatorio
+        self.image = pygame.image.load(imagen_aleatoria).convert_alpha()  # No es necesario usar os.path.join
+        
