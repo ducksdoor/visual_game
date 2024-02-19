@@ -172,7 +172,7 @@ while run:
     window.blit(pergamino, (MAX_X, 0))  # Dibujar el pergamino en la sección gris
 
     # Dibujar el segundo rectángulo que cubre el cuarto restante de la altura total
-    pygame.draw.rect(window, MARRON, (MAX_X, three_fourth_height, SCREEN_WIDTH - MAX_X, SCREEN_HEIGHT - three_fourth_height))
+    #apygame.draw.rect(window, MARRON, (MAX_X, three_fourth_height, SCREEN_WIDTH - MAX_X, SCREEN_HEIGHT - three_fourth_height))
 
     # Simular escritura del mensaje de bienvenida
     if welcome_index < len(welcome_message):

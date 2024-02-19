@@ -9,7 +9,8 @@ def escenario_combate(MAX_X, SCREEN_HEIGHT):
 def pergamino_texto(MAX_X, SCREEN_HEIGHT, SCREEN_WIDTH):
     # Cargar la imagen del pergamino para la sección gris
     pergamino = pygame.image.load("imagen/pergamino.jpg").convert()
-    pergamino_width = SCREEN_WIDTH
-    #pergamino_height = pergamino.get_height()  # Mantener la altura original
-    pergamino = pygame.transform.scale(pergamino, (pergamino_width, SCREEN_HEIGHT))
+
+    # Escalar la imagen al tamaño dado, sin mantener la relación de aspecto original
+    pergamino = pygame.transform.scale(pergamino, (MAX_X, SCREEN_HEIGHT))
+
     return pergamino
