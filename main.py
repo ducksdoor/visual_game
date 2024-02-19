@@ -10,6 +10,7 @@ from enemigo import Enemigo
 import acciones
 import colision
 import cronometro
+import escenario
 # Inicializar Pygame, ventana de intro, y cronometro
 
 pygame.init()
@@ -34,7 +35,7 @@ pygame.display.set_caption("Juego RPG de Combate")
 MAX_X = SCREEN_WIDTH * 2 // 3
 
 # Instanciar el jugador y enemigo
-jugador = Jugador(SCREEN_WIDTH // 3, SCREEN_HEIGHT - 50)
+jugador = Jugador(SCREEN_WIDTH // 3, SCREEN_HEIGHT - 50, SCREEN_WIDTH, SCREEN_HEIGHT)
 enemigo = Enemigo(SCREEN_WIDTH // 3, SCREEN_HEIGHT // 3)
 vida_length = jugador.vida * 5
 
@@ -62,20 +63,13 @@ welcome_message = "¡Bienvenido al juego RPG de Combate!"
 welcome_index = 0
 welcome_display = ""
 
-# Cargar la imagen de fondo
-fondo = pygame.image.load("imagen/fondo.jpg").convert()
-fondo = pygame.transform.scale(fondo, (MAX_X, SCREEN_HEIGHT))  # Escalar la imagen al tamaño de la sección azul
-
-# Cargar la imagen del pergamino para la sección gris
-pergamino = pygame.image.load("imagen/pergamino.jpg").convert()
-pergamino = pygame.transform.scale(pergamino, (SCREEN_WIDTH - MAX_X, SCREEN_HEIGHT))  # Escalar la imagen al tamaño de la sección gris
-
-
-
+#Carga las imagenes de turno
+fondo = escenario.escenario_combate(MAX_X, SCREEN_HEIGHT)
+pergamino = escenario.pergamino_texto(MAX_X, SCREEN_HEIGHT, SCREEN_WIDTH)
 #############################################################
 
 # Bucle principal del juego
-run = inicio.mostrar_ventana_inicial()
+run = inicio.mostrar_ventana_inicial(window)
 
 tiempo_inicio = time.time()
 text_input_mode = False  # Estado inicial: modo de movimiento del cuadrado
@@ -126,7 +120,7 @@ while run:
     # Manejar eventos relacionados con el movimiento del cuadrado
     if not text_input_mode:
         keys = pygame.key.get_pressed()
-        jugador.mover(keys)
+        jugador.mover(keys, SCREEN_WIDTH, SCREEN_HEIGHT)
 
     # Generar disparos del enemigo
     if random.randint(0, 100) < 3:

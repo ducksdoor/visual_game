@@ -1,8 +1,7 @@
 import pygame
 
-def tutorial(show_tutorial):
-    WIDTH, HEIGHT = 1000, 600
-    window = pygame.display.set_mode((WIDTH, HEIGHT))
+def tutorial(show_tutorial, window):
+    WIDTH, HEIGHT =  window.get_size()
     font = pygame.font.Font(None, 36)
     BLACK = (0, 0, 0)
     fondo = pygame.image.load("imagen/fondo.jpg").convert()  # Cargar la imagen de fondo del tutorial

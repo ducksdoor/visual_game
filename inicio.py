@@ -1,11 +1,10 @@
 import pygame
 import tutorial
 
-def mostrar_ventana_inicial():
+def mostrar_ventana_inicial(window):
 
     screen_info = pygame.display.Info()
     WIDTH, HEIGHT = screen_info.current_w, screen_info.current_h
-    window = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
     font = pygame.font.Font(None, 36)
     BLACK = (0, 0, 0)
     fondo = pygame.image.load("imagen/fondo.jpg").convert()  # Cargar la imagen de fondo
@@ -33,5 +32,5 @@ def mostrar_ventana_inicial():
                     return False
                 if event.key == pygame.K_p:
                     show_tutorial = True
-                    return tutorial.tutorial(show_tutorial)
+                    return tutorial.tutorial(show_tutorial, window)
 
