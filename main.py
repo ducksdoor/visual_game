@@ -11,18 +11,12 @@ import acciones
 import colision
 import cronometro
 import escenario
+from variables_color import *
+import terminal
 # Inicializar Pygame, ventana de intro, y cronometro
-
 pygame.init()
-
 clock = pygame.time.Clock()
-# Definir colores
-WHITE = (255, 255, 255)
-ROJO = (255, 0, 0)
-BLACK = (0, 0, 0)
-VERDE = (0, 255, 0)
-MARRON = (139, 69, 19)
-BLUE = pygame.Color('lightskyblue3')
+
 # Obtener el tamaño de la pantalla del ordenador
 screen_info = pygame.display.Info()
 SCREEN_WIDTH, SCREEN_HEIGHT = screen_info.current_w, screen_info.current_h
@@ -32,40 +26,38 @@ window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREE
 pygame.display.set_caption("Juego RPG de Combate")
 
 # Limitar la posición máxima del cuadrado a las 2/3 partes izquierdas de la pantalla
-MAX_X = SCREEN_WIDTH * 2 // 3
+limite_derecha = SCREEN_WIDTH * 2 // 3
 
 # Instanciar el jugador y enemigo
 jugador = Jugador(SCREEN_WIDTH // 3, SCREEN_HEIGHT - 50, SCREEN_WIDTH, SCREEN_HEIGHT)
 enemigo = Enemigo(SCREEN_WIDTH // 3, SCREEN_HEIGHT // 3)
-vida_length = jugador.vida * 5
+
 
 # Lista de disparos del enemigo
 disparos = []
 
 # Texto en la terminal
 terminal_text = []
-font = pygame.font.Font(None, 24)
+font = pygame.font.Font(None, 26)
+# Mensaje de bienvenida
+terminal_text.append(("¡Bienvenido al juego RPG de Combate!", NEGRO))
+terminal_text.append(("Deberias escribir 'ayuda' antes de morir", ROJO))
 
 # Texto ingresado por el usuario
 user_input = ''
 user_font = pygame.font.Font(None, 30)
-user_input_rect = pygame.Rect(MAX_X + 10, SCREEN_HEIGHT// 2 + 100, 400, 40)
+user_input_rect = pygame.Rect(limite_derecha + 100, SCREEN_HEIGHT//2 + 100, 400, 40)
 input_color = BLUE
 input_active = False
 
 # Definir las coordenadas y dimensiones del área para enviar texto
-send_area_rect = pygame.Rect(MAX_X + 10, SCREEN_HEIGHT// 2 + 150, 200, 50)
-send_area_color = (0, 255, 0)  # Cambiar a verde
+send_area_rect = pygame.Rect(limite_derecha + 10, SCREEN_HEIGHT// 2 + 150, 200, 50)
 send_area_active = False
 
-# Mensaje de bienvenida
-welcome_message = "¡Bienvenido al juego RPG de Combate!"
-welcome_index = 0
-welcome_display = ""
 
 #Carga las imagenes de turno
-fondo = escenario.escenario_combate(MAX_X, SCREEN_HEIGHT)
-pergamino = escenario.pergamino_texto(MAX_X, SCREEN_HEIGHT, SCREEN_WIDTH)
+fondo = escenario.escenario_combate(limite_derecha, SCREEN_HEIGHT)
+pergamino = escenario.pergamino_texto(limite_derecha, SCREEN_HEIGHT, SCREEN_WIDTH)
 #############################################################
 
 # Bucle principal del juego
@@ -81,7 +73,7 @@ while run:
 
     # Manejo de eventos
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             run = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Obtener las coordenadas del clic del mouse
@@ -100,11 +92,9 @@ while run:
             #esta parte siempre trae problemas, no hay que eliminarla ni bloquearla con otros ifs...
             if jugador.rect.collidepoint(mouse_x, mouse_y):
                 jugador.cambiar_imagen()
-
+            
         # Manejar eventos de teclado si estamos en modo de entrada de texto
         if event.type == pygame.KEYDOWN and text_input_mode:
-            if event.key == pygame.K_ESCAPE:
-                run = False
             if event.key == pygame.K_RETURN:
                 if user_input:  # Verificar si el usuario ha ingresado texto
                     terminal_text = acciones.comandos(jugador, enemigo, user_input, terminal_text)
@@ -169,35 +159,18 @@ while run:
         print("Game Over")
         run = False
 
-    window.blit(pergamino, (MAX_X, 0))  # Dibujar el pergamino en la sección gris
+    #Aquí se carga el fondo y la terminal
+    terminal.terminal(window, pergamino, limite_derecha, terminal_text, font)
 
-    # Dibujar el segundo rectángulo que cubre el cuarto restante de la altura total
-    #apygame.draw.rect(window, MARRON, (MAX_X, three_fourth_height, SCREEN_WIDTH - MAX_X, SCREEN_HEIGHT - three_fourth_height))
-
-    # Simular escritura del mensaje de bienvenida
-    if welcome_index < len(welcome_message):
-        welcome_display += welcome_message[welcome_index]
-        welcome_index += 1
-    elif not welcome_displayed:
-        terminal_text.append(welcome_message)
-        terminal_text.append("Deberias escribir 'ayuda' antes de morir")
-        welcome_displayed = True
-
-    # Dibujar texto en la terminal
-    text_y = 60
-    for line in terminal_text:
-        text_surface = font.render(line, True, BLACK)
-        window.blit(text_surface, (MAX_X + 10, text_y))
-        text_y += font.get_height()
-
-    # Dibujar las vidas del jugador en la parte marrón de la pantalla
-    vida_text_surface = font.render(f"Vidas: {jugador.vida}", True, BLACK)
-    window.blit(vida_text_surface, (MAX_X + 10, three_fourth_height + 60))
-    pygame.draw.rect(window, ROJO, (MAX_X + 10, three_fourth_height + 80, vida_length, 20))
+    # Dibujar las vidas del jugador 
+    vida_length = jugador.vida * 5
+    vida_text_surface = font.render(f"Vidas: {jugador.vida}", True, NEGRO)
+    window.blit(vida_text_surface, (limite_derecha + 150, three_fourth_height + 60))
+    pygame.draw.rect(window, ROJO, (limite_derecha + 150, three_fourth_height + 80, vida_length, 20))
 
     # Dibujar el área de entrada de texto para el usuario
     pygame.draw.rect(window, input_color if text_input_mode else WHITE, user_input_rect)
-    user_text_surface = user_font.render(user_input, True, BLACK)
+    user_text_surface = user_font.render(user_input, True, NEGRO)
     window.blit(user_text_surface, (user_input_rect.x + 5, user_input_rect.y + 5))
 
     # Definir el radio del botón circular
@@ -206,7 +179,7 @@ while run:
     pygame.draw.circle(window, VERDE, (send_area_rect.x + button_radius, send_area_rect.y + button_radius),
                        button_radius)
     # Dibujar el texto "Enviar" en el centro del círculo
-    text_surface = user_font.render("Enviar", True, BLACK)
+    text_surface = user_font.render("Enviar", True, NEGRO)
     text_rect = text_surface.get_rect(center=(send_area_rect.x + button_radius, send_area_rect.y + button_radius))
     window.blit(text_surface, text_rect)
 
@@ -219,4 +192,3 @@ while run:
 # Salir del juego
 pygame.quit()
 sys.exit()
-

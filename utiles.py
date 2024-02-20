@@ -1,3 +1,6 @@
+from variables_color import *
+
+
 def dividir_en_lineas(frase, agregar_prefijo=True):
     palabras = frase.split()  # Dividir la frase en palabras
     lineas = []
@@ -8,14 +11,15 @@ def dividir_en_lineas(frase, agregar_prefijo=True):
                 linea_actual += " "
             linea_actual += palabra
         else:
-            lineas.append(linea_actual)  # Agregar la línea actual a la lista de líneas
+            lineas.append((linea_actual, NEGRO))  # Agregar la línea actual a la lista de líneas
             linea_actual = palabra  # Empezar una nueva línea con la palabra actual
     if linea_actual:  # Agregar la última línea si no está vacía
-        lineas.append(linea_actual)
+        lineas.append((linea_actual, NEGRO)) 
 
     # Agregar el prefijo si es necesario
     if agregar_prefijo and lineas:
-        lineas[0] = "Has dicho: " + lineas[0]
+            lineas[0] = ("Has dicho: " + lineas[0][0], lineas[0][1])
+
 
     return lineas
 

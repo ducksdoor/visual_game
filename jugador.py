@@ -1,8 +1,7 @@
 import pygame
 import random
 import os
-
-BLACK = (0, 0, 0)
+from variables_color import *
 
 
 # Lista de nombres de archivos de imágenes
@@ -20,8 +19,8 @@ class Jugador:
         self.y = y
         self.size = size
         self.speed = speed
-        self.color = BLACK
-        self.vida = 5
+        self.color = NEGRO
+        self.vida = 20
         self.mision = 1
 
 
@@ -39,9 +38,11 @@ class Jugador:
         self.vida -= 1
 
     def mover(self, keys, width, height):
+        max_derecha = width * 2 // 3  # Definir la nueva posición máxima en la pantalla
+
         if keys[pygame.K_a] and self.rect.left > 0:  # Mover hacia la izquierda
             self.rect.x -= self.speed
-        if keys[pygame.K_d] and self.rect.right < width:  # Mover hacia la derecha
+        if keys[pygame.K_d] and self.rect.right < max_derecha:  # Mover hacia la derecha
             self.rect.x += self.speed
         if keys[pygame.K_w] and self.rect.top > 0:  # Mover hacia arriba
             self.rect.y -= self.speed
