@@ -1,5 +1,6 @@
 import pygame
 
+BLANCO = (255, 255, 255)
 WHITE = (255, 255, 255)
 ROJO = (255, 0, 0)
 NEGRO = (0, 0, 0)

@@ -1,15 +1,14 @@
 import pygame
+from variables_color import *
+from variables_globales import *
 
 def tutorial(show_tutorial, window):
     WIDTH, HEIGHT =  window.get_size()
     font = pygame.font.Font(None, 36)
-    BLACK = (0, 0, 0)
-    fondo = pygame.image.load("imagen/fondo.jpg").convert()  # Cargar la imagen de fondo del tutorial
-    fondo = pygame.transform.scale(fondo, (WIDTH, HEIGHT))  # Escalar la imagen al tamaño de la ventana
 
     while show_tutorial:
         window.blit(fondo, (0, 0))  # Dibujar el fondo del tutorial en la ventana
-        mensaje = font.render("Tutorial: Pulsa Esc para salir del tutorial", True, BLACK)
+        mensaje = font.render("Tutorial: Pulsa Esc para salir del tutorial", True, NEGRO)
         window.blit(mensaje, (WIDTH // 2 - mensaje.get_width() // 2, HEIGHT // 2 - mensaje.get_height() // 2))
         pygame.display.update()
 

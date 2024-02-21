@@ -7,3 +7,9 @@ Diario de producción:
 20/02/2024
 
     No tengo claro a donde van los cambios,... 
+
+21/02/2024
+
+    He consegido crear un menu de pausa con el boton escape.
+TO DO -> El crono sigue contando aunque este en el menu de pausa.
+    Es cierto que el menu de pausa se puede hacer mas cuco pero al menos ya esta funcional.
